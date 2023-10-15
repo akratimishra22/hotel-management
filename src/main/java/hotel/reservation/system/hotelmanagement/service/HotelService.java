@@ -5,6 +5,9 @@ import hotel.reservation.system.hotelmanagement.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class HotelService {
 
@@ -44,6 +47,32 @@ public class HotelService {
     public boolean areRoomsAvailable(Long id) {
         Hotel hotel = hotelRepository.findById(id).orElse(null);
         return hotel != null && hotel.getNumberOfRooms() > 0;
+    }
+
+    public List<Hotel> getAllHotels() {
+        return hotelRepository.findAll();
+    }
+
+    public Hotel updateHotel(Long id, Hotel updatedHotel) {
+        Optional<Hotel> existingHotel = hotelRepository.findById(id);
+        if (existingHotel.isPresent()) {
+            Hotel hotel = existingHotel.get();
+            hotel.setName(updatedHotel.getName());
+            hotel.setNumberOfRooms(updatedHotel.getNumberOfRooms());
+            return hotelRepository.save(hotel);
+        } else {
+            return null;
+        }
+    }
+
+    public boolean deleteHotel(Long id) {
+        Optional<Hotel> hotel = hotelRepository.findById(id);
+        if (hotel.isPresent()) {
+            hotelRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

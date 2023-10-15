@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/hotels")
@@ -58,6 +59,40 @@ public class HotelController {
     public ResponseEntity<Boolean> areRoomsAvailable(@PathVariable Long id) {
         boolean roomsAvailable = hotelService.areRoomsAvailable(id);
         return ResponseEntity.ok(roomsAvailable);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Hotel>> getAllHotels() {
+        try {
+            List<Hotel> hotels = hotelService.getAllHotels();
+
+            if (hotels.isEmpty())
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+            return new ResponseEntity<>(hotels, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Hotel> updateHotel(@PathVariable Long id, @Valid @RequestBody Hotel updatedHotel) {
+        Hotel hotel = hotelService.updateHotel(id, updatedHotel);
+        if (hotel != null) {
+            return new ResponseEntity<>(hotel, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteHotel(@PathVariable Long id) {
+        boolean deleted = hotelService.deleteHotel(id);
+        if (deleted) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
 
