@@ -34,7 +34,7 @@ public class HotelController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @PatchMapping("/{id}/increment-rooms")
+    @PutMapping("/{id}/increment-rooms")
     public ResponseEntity<Hotel> incrementNumberOfOccupiedRooms(@PathVariable Long id) {
         Hotel hotel = hotelService.incrementNumberOfOccupiedRooms(id);
         if (hotel != null) {
@@ -44,7 +44,7 @@ public class HotelController {
         }
     }
 
-    @PatchMapping("/{id}/decrement-rooms")
+    @PutMapping("/{id}/decrement-rooms")
     public ResponseEntity<Hotel> decrementNumberOfOccupiedRooms(@PathVariable Long id) {
         Hotel hotel = hotelService.decrementNumberOfOccupiedRooms(id);
         if (hotel != null) {
